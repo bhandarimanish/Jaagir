@@ -13,15 +13,15 @@ class JobController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['employer','verified'], ['except' => array('index', 'show', 'apply', 'allJobs','searchJobs')]);
+        $this->middleware(['employer', 'verified'], ['except' => array('index', 'show', 'apply', 'allJobs', 'searchJobs')]);
     }
 
     public function index()
     {
-        $jobs = Job::latest()->limit(10)->where('status', 1)->get();
+        $jobs = Job::latest()->whereDate('last_date', '>', date('Y-m-d'))->limit(5)->where('status', 1)->get();
         $companies = Company::get()->random(8);
         $categories = Category::with('jobs')->get();
-        return view('welcome', compact('jobs', 'companies','categories'));
+        return view('welcome', compact('jobs', 'companies', 'categories'));
     }
 
     /**
@@ -43,35 +43,35 @@ class JobController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title'=>'required|min:5',
-            'description'=>'required',
-            'roles'=>'required',
-            'address'=>'required',
-            'position'=>'required',
-            'last_date'=>'required',
-            'number_of_vacancy'=>'required|numeric',
-            'experience'=>'required|numeric'
+            'title' => 'required|min:5',
+            'description' => 'required',
+            'roles' => 'required',
+            'address' => 'required',
+            'position' => 'required',
+            'last_date' => 'required',
+            'number_of_vacancy' => 'required|numeric',
+            'experience' => 'required|numeric'
         ]);
         $user_id = auth()->user()->id;
         $company = Company::where('user_id', $user_id)->first();
         $company_id = $company->id;
         Job::create([
-           'user_id' => $user_id,
+            'user_id' => $user_id,
             'company_id' => $company_id,
-            'title'=>request('title'),
-            'slug' =>Str::slug(request('title')),
-            'description'=>request('description'),
-            'roles'=>request('roles'),
-            'category_id' =>request('category'),
-            'position'=>request('position'),
-            'address'=>request('address'),
-            'type'=>request('type'),
-            'status'=>request('status'),
-            'last_date'=>request('last_date'),
-            'number_of_vacancy'=>request('number_of_vacancy'),
-            'gender'=>request('gender'),
-            'experience'=>request('experience'),
-            'salary'=>request('salary')
+            'title' => request('title'),
+            'slug' => Str::slug(request('title')),
+            'description' => request('description'),
+            'roles' => request('roles'),
+            'category_id' => request('category'),
+            'position' => request('position'),
+            'address' => request('address'),
+            'type' => request('type'),
+            'status' => request('status'),
+            'last_date' => request('last_date'),
+            'number_of_vacancy' => request('number_of_vacancy'),
+            'gender' => request('gender'),
+            'experience' => request('experience'),
+            'salary' => request('salary')
 
         ]);
         return redirect()->back()->with('message', 'Job created successfully!');
@@ -85,8 +85,45 @@ class JobController extends Controller
      */
     public function show($id, Job $job)
     {
-        return view('jobs.show', compact('job'));
+
+        $jobRecommendations = $this->jobRecommendations($job);
+
+        return view('jobs.show', compact('job', 'jobRecommendations'));
     }
+
+
+    public function jobRecommendations($job)
+    {
+        $data = [];
+
+        $jobsBasedOnCategories = Job::latest()->where('category_id', $job->category_id)
+            ->whereDate('last_date', '>', date('Y-m-d'))
+            ->where('id', '!=', $job->id)
+            ->where('status', 1)
+            ->limit(6)
+            ->get();
+        array_push($data, $jobsBasedOnCategories);
+
+        $jobBasedOnCompany = Job::latest()
+            ->where('company_id', $job->company_id)
+            ->whereDate('last_date', '>', date('Y-m-d'))
+            ->where('id', '!=', $job->id)
+            ->where('status', 1)
+            ->limit(6)
+            ->get();
+        array_push($data, $jobBasedOnCompany);
+
+        $jobBasedOnPosition = Job::where('position', 'LIKE', '%' . $job->position . '%')
+            ->where('id', '!=', $job->id)
+            ->where('status', 1)
+            ->limit(6);
+        array_push($data, $jobBasedOnPosition);
+        $collection  = collect($data);
+        $unique = $collection->unique("id");
+        $jobRecommendations =  $unique->values()->first();
+        return $jobRecommendations;
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -144,51 +181,49 @@ class JobController extends Controller
         return view('jobs.applicants', compact('applicants'));
     }
 
-    public function allJobs(Request $request){
-       
-        //front search
-           $search = $request->get('search');
-           $address = $request->get('address');
-           if($search && $address){
-              $jobs = Job::where('position','LIKE','%'.$search.'%')
-                       ->orWhere('title','LIKE','%'.$search.'%')
-                       ->orWhere('type','LIKE','%'.$search.'%')
-                       ->orWhere('address','LIKE','%'.$address.'%')
-                       ->paginate(20);
-   
-               return view('jobs.alljobs',compact('jobs'));
-   
-           }
-   
-   
-   
-   
-          $keyword = $request->get('position');
-          $type = $request->get('type');
-          $category = $request->get('category_id');
-          $address = $request->get('address');
-          if($keyword||$type||$category||$address){
-           $jobs = Job::where('position','LIKE','%'.$keyword.'%')
-                   ->orWhere('type',$type)
-                   ->orWhere('category_id',$category)
-                   ->orWhere('address',$address)
-                   ->paginate(20);
-                   return view('jobs.alljobs',compact('jobs'));
-          }else{
-   
-               $jobs = Job::latest()->paginate(20);
-               return view('jobs.alljobs',compact('jobs'));
-       }
-   
-   
-   }
-    public function searchJobs(Request $request){
-       
-        $keyword = $request->get('keyword');
-        $job = Job::where('title','like','%'.$keyword.'%')
-                ->orWhere('position','like','%'.$keyword.'%')
-                ->limit(5)->get();
-        return response()->json($job);
+    public function allJobs(Request $request)
+    {
 
+        //front search
+        $search = $request->get('search');
+        $address = $request->get('address');
+        if ($search && $address) {
+            $jobs = Job::where('position', 'LIKE', '%' . $search . '%')
+                ->orWhere('title', 'LIKE', '%' . $search . '%')
+                ->orWhere('type', 'LIKE', '%' . $search . '%')
+                ->orWhere('address', 'LIKE', '%' . $address . '%')
+                ->paginate(20);
+
+            return view('jobs.alljobs', compact('jobs'));
+        }
+
+
+
+
+        $keyword = $request->get('position');
+        $type = $request->get('type');
+        $category = $request->get('category_id');
+        $address = $request->get('address');
+        if ($keyword || $type || $category || $address) {
+            $jobs = Job::where('position', 'LIKE', '%' . $keyword . '%')
+                ->orWhere('type', $type)
+                ->orWhere('category_id', $category)
+                ->orWhere('address', $address)
+                ->paginate(20);
+            return view('jobs.alljobs', compact('jobs'));
+        } else {
+
+            $jobs = Job::latest()->paginate(20);
+            return view('jobs.alljobs', compact('jobs'));
+        }
+    }
+    public function searchJobs(Request $request)
+    {
+
+        $keyword = $request->get('keyword');
+        $job = Job::where('title', 'like', '%' . $keyword . '%')
+            ->orWhere('position', 'like', '%' . $keyword . '%')
+            ->limit(5)->get();
+        return response()->json($job);
     }
 }

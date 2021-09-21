@@ -54,3 +54,6 @@ Route::get('/companies','CompanyController@company')->name('company');
 
 //email
 Route::post('/job/mail','EmailController@send')->name('mail');
+
+//admin
+Route::get('/dashboard','DashboardController@index')->middleware('admin');
