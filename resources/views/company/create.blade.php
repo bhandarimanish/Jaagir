@@ -4,13 +4,6 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-        @if(empty($company->cover_photo))
-            <img src="{{asset('companycoverphoto/cover.png')}}" style="width: 100%;height:200px">
-            @else
-            <img src="{{asset('companycoverphoto')}}/{{$company->cover_photo}}" style="width: 100%;height:200px">
-            @endif
-            <br><br>
-
             <form action="{{route('company.logo')}}" method="POST" enctype="multipart/form-data">@csrf
 
             <div class="card">

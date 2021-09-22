@@ -8,6 +8,7 @@ use App\Job;
 use App\Company;
 use App\Category;
 use Illuminate\Support\Facades\Auth;
+use App\Post;
 
 class JobController extends Controller
 {
@@ -21,7 +22,8 @@ class JobController extends Controller
         $jobs = Job::latest()->whereDate('last_date', '>', date('Y-m-d'))->limit(5)->where('status', 1)->get();
         $companies = Company::get()->random(8);
         $categories = Category::with('jobs')->get();
-        return view('welcome', compact('jobs', 'companies', 'categories'));
+        $posts = Post::where('status',1)->get();
+        return view('welcome', compact('jobs', 'companies', 'categories','posts'));
     }
 
     /**

@@ -126,12 +126,10 @@ class CompanyController extends Controller
         $user_id=auth()->user()->id;
         if($request->hasfile('logo'))
         {
-            $file=$request->file('logo');
-            $ext=$file->getClientOriginalExtension();
-            $filename=time().'.'.$ext;
-            $file->move('companylogo',$filename);
+            $logo = $request->logo->hashName();
+			$request->logo->move(public_path('companylogo'), $logo);
             Company::where('user_id',$user_id)->update([
-                'logo'=>$filename
+                'logo'=>$logo
             ]);
             return redirect()->back()->with('message','Companylogo updated successfully!');
         }

@@ -32,7 +32,7 @@
                                 @if(empty($company->logo))
                                 <img src="{{asset('companylogo/man.jpg')}}" style="width: 100%;height:200px">
                                 @else
-                                <img width="100" src="{{asset('companylogo')}}/{{$company->logo}}">
+                                <img width="100" height="100" src="{{asset('companylogo')}}/{{$company->logo}}">
                                 @endif
                             </td>
                             <td>Position:{{$job->position}}
