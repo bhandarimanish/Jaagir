@@ -9,6 +9,7 @@ use App\Company;
 use App\Category;
 use Illuminate\Support\Facades\Auth;
 use App\Post;
+use App\Testimonial;
 
 class JobController extends Controller
 {
@@ -23,7 +24,8 @@ class JobController extends Controller
         $companies = Company::get()->random(8);
         $categories = Category::with('jobs')->get();
         $posts = Post::where('status',1)->get();
-        return view('welcome', compact('jobs', 'companies', 'categories','posts'));
+        $testimonial=Testimonial::orderBy('id','desc')->first();
+        return view('welcome', compact('jobs', 'companies', 'categories','posts','testimonial'));
     }
 
     /**

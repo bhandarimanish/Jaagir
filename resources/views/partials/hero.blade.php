@@ -10,7 +10,7 @@
                 <div class="col-md-9">
                   <div class="row">
                     <div class="col-md-6 mb-3 mb-md-0">
-                      <input type="text" name="search" class="mr-3 form-control border-0 px-4" placeholder="job title, keywords, job type " required="">
+                      <input type="text" name="search" class="mr-3 form-control zzborder-0 px-4" placeholder="job title, keywords, job type " required="">
                     </div>
                     <div class="col-md-6 mb-3 mb-md-0">
                       <div class="input-wrap">
