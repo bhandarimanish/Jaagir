@@ -1,10 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
+            @if(count($applicants)>0)
             @foreach($applicants as $applicant)
                 <div class="card-header"><a href="{{route('jobs.show',[$applicant->id,$applicant->slug])}}"> {{$applicant->title}}</a></div>
 
@@ -45,6 +46,11 @@
                 </div>
                 @endforeach
                 @endforeach
+                @else
+                <div class="mb-5 mt-2 ml-2">
+              <p style="color: red;"> No,one has applied for this job!</p>
+                </div>
+              @endif
             </div>
         </div>
     </div>

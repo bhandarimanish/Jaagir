@@ -8,8 +8,8 @@
 
     
 
-    <div class="site-section bg-light">
-      <div class="container">
+    <div class=" bg-light">
+      <div class="container mt-4">
         <div class="row">
        @if(Session::has('message'))
                  <div class="alert alert-success">
@@ -28,7 +28,7 @@
                             <div class="col-md-12">Company name</div>
 
                             <div class="col-md-12">
-                                <input id="name" type="text" placeholder="Company name" class="form-control{{ $errors->has('cname') ? ' is-invalid' : '' }}" name="cname" value="{{ old('cname') }}" required autofocus>
+                                <input id="name" type="text" placeholder="Company name" class="form-control{{ $errors->has('cname') ? ' is-invalid' : '' }}" name="cname" value="{{ old('cname') }}"  autofocus>
 
                                 @if ($errors->has('cname'))
                                     <span class="invalid-feedback" role="alert">
@@ -44,7 +44,7 @@
                             <div class="col-md-12">Email</div>
 
                             <div class="col-md-12">
-                                <input id="email" type="text" placeholder="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
+                                <input id="email" type="text" placeholder="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}"  autofocus>
 
                                 @if ($errors->has('email'))
                                     <span class="invalid-feedback" role="alert">
@@ -60,7 +60,7 @@
                             <div class="col-md-12">Password</div>
 
                             <div class="col-md-12">
-                                <input id="password" type="password" placeholder="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" value="{{ old('password') }}" required autofocus>
+                                <input id="password" type="password" placeholder="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" value="{{ old('password') }}"  autofocus>
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">
@@ -73,7 +73,7 @@
                             <div class="col-md-12">Confirm password</div>
 
                             <div class="col-md-12">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" >
                             </div>
                         </div>
 

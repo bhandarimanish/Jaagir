@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         factory('App\User',10)->create();
         factory('App\Company',10)->create();
         factory('App\Job',10)->create();
+        factory('App\Testimonial',1)->create();
 
         $categories=[
             'Technology',

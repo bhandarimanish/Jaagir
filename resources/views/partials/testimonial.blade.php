@@ -19,7 +19,7 @@
             <div class="text-left mb-5 section-heading">
               <h2>Testimonies</h2>
             </div>
-            <p class="mb-4 h5 font-italic lineheight1-5">&ldquo;L{{$testimonial->content}}&rdquo;</p>
+            <p class="mb-4 h5 font-italic lineheight1-5">&ldquo;{{$testimonial->content}}&rdquo;</p>
             <p>&mdash; <strong class="text-black font-weight-bold">{{$testimonial->name}}</strong>, {{$testimonial->profession}}</p>
             <p><a href="https://vimeo.com/{{$testimonial->video_id}}" class="popup-vimeo text-uppercase">Watch Video <span class="icon-arrow-right small"></span></a></p>
           </div>

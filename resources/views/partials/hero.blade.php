@@ -1,6 +1,6 @@
 <div style="height: 113px;"></div>
 
-    <div class="site-blocks-cover overlay" style="background-image: url('external/images/hero_1.jpg');" data-aos="fade" data-stellar-background-ratio="0.5">
+    <div class="site-blocks-cover overlay" style="background-image: url('external/images/test.jpg');" data-aos="fade" data-stellar-background-ratio="0.5">
       <div class="container">
         <div class="row align-items-center">
           <div class="col-12" data-aos="fade">
@@ -21,7 +21,7 @@
                   </div>
                 </div>
                 <div class="col-md-3">
-                  <input type="submit" class="btn btn-search btn-primary btn-block" value="Search">
+                  <input type="submit" class="btn btn-search  btn-block" value="Search" style="background-color:#2374e1;color:white">
                 </div>
               </div>
               <div class="row">

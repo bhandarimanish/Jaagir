@@ -1,5 +1,4 @@
-@extends('layouts.app')
-
+@extends('layouts.main')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -28,8 +27,8 @@
             @endforeach
 
             @else
-            You have not  favourited any jobs to show.
-            <a href="/">Find Jobs</a>
+            <p><b>You have not  favourited any jobs to show.</b>
+            <a href="/">Find Jobs</a></p>
             @endif
 
             @else

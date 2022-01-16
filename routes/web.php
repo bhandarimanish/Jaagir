@@ -74,3 +74,4 @@ Route::get('testimonial','TestimonialController@index')->middleware('admin');
 Route::get('testimonial/create','TestimonialController@create')->middleware('admin');
 Route::post('testimonial/create','TestimonialController@store')->name('testimonial.store')->middleware('admin');
 
+Route::view('test','test');

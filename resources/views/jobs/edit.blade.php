@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <div class="container">
@@ -136,7 +136,7 @@
             </div>
             <div class="form-group">
                 <label for="lastdate">Last date:</label>
-                <input type="text" id="datepicker" name="last_date" class="form-control {{ $errors->has('last_date') ? ' is-invalid' : '' }}"  value="{{ $job->last_date }}">
+                <input type="date" name="last_date" class="form-control" value="{{ $job->last_date }}">
                 @if ($errors->has('last_date'))
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $errors->first('last_date') }}</strong>

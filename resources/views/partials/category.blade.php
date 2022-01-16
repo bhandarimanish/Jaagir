@@ -10,7 +10,7 @@
           <div class="col-sm-6 col-md-4 col-lg-3 mb-3" data-aos="fade-up" data-aos-delay="800">
             <a href="{{route('category.index',[$category->id])}}" class="h-100 feature-item">
               <span class=" mb-3 text-primary"></span>
-              <h2>{{$category->name}}</h2>
+              <h2 class="font-weight-bold">{{$category->name}}</h2>
               <span class="counting">{{$category->jobs->count()}}</span>
             </a>
           </div>

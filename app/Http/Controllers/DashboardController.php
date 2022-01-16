@@ -9,6 +9,10 @@ use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
+	public function __construct()
+    {
+        $this->middleware('admin');
+    }
 	public function index()
 	{
 		$posts = Post::latest()->paginate(20);
@@ -37,7 +41,7 @@ class DashboardController extends Controller
 				'status' => $request->get('status')
 			]);
 		}
-		return redirect('/dashboard')->with('message', 'Post created successfully');
+		return redirect('/dashboard')->with('message', 'Blog created successfully');
 	}
 	public function edit($id)
 	{
@@ -63,7 +67,7 @@ class DashboardController extends Controller
 		}
 
 		$this->updateAllExceptImage($request, $id);
-		return redirect('/dashboard')->with('message', 'Post updated successfully');
+		return redirect('/dashboard')->with('message', 'Blog updated successfully');
 	}
 
 	public function updateAllExceptImage(Request $request, $id)

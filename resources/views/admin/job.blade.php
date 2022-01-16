@@ -1,21 +1,27 @@
-@extends('layouts.app')
+@extends('admin.layouts.master')
+
 @section('content')
-<div class="container">
-	<h1>All Jobs</h1><span style="float:right"><a href="/dashboard">Back</a></span>
-	  @if(Session::has('message'))
-
-          <div class="alert alert-success">{{Session::get('message')}}</div>
-          @endif
-
-	<div class="row">
-<div class="col-md-12">
-	<div class="card">
-		<div class="card-header">
-					All jobs
-		</div>
-		<div class="card-body">
-
-<table class="table table-striped">
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="breadcumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active " aria-current="page">All Jobs</li>
+                </ol>
+            </nav>
+            <a class="btn btn-secondary mb-1" href="/dashboard"> <i class="fa fa-arrow-left"></i> Back
+        </a>
+            @if(Session::has('message'))
+            <div class="alert alert-success">
+                {{Session::get('message')}}
+            </div>
+            @endif
+            @if(Session::has('messages'))
+            <div class="alert alert-danger">
+                {{Session::get('messages')}}
+            </div>
+            @endif
+            <table class="table table-striped">
   <thead>
     <tr>
       <th scope="col">Created Date</th>
@@ -46,11 +52,7 @@
 </table>
 
 {{$jobs->links()}}
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
-
-</div>
-</div>
-
 @endsection

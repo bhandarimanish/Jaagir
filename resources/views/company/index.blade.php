@@ -11,13 +11,14 @@
             @else
             <img src="{{asset('companycoverphoto')}}/{{$company->cover_photo}}" style="width: 100%;height:200px">
             @endif
+
             <div class="col-lg-12">
                 <div class="p-4 mb-8 bg-white">
                     <div class="company-desc">
                         @if(empty($company->logo))
-                        <img src="{{asset('companylogo/man.jpg')}}" style="width: 100%;height:200px">
+                        <img src="{{asset('companylogo/logos.png')}}" class="center" style="width: 100px;height:100px;">
                         @else
-                        <img width="100" src="{{asset('companylogo')}}/{{$company->logo}}">
+                        <img width="100" class="center" src="{{asset('companylogo')}}/{{$company->logo}}" style="width: 100px;height:100px;">
                         @endif
                         <p>{{$company->description}}</p>
                         <h1>{{$company->cname}}</h1>
@@ -25,7 +26,9 @@
                     </div>
                 </div>
                 <table class="table">
+                    <h3 class="p-4 mb-8 bg-white">Job Posted</h3>
                     <tbody>
+                        @if(count($company->jobs)>0)
                         @foreach($company->jobs as $job)
                         <tr>
                             <td>
@@ -50,6 +53,9 @@
                             </td>
                         </tr>
                         @endforeach
+                        @else
+                        <p style="color: red;" class="p-4 mt-4 bg-white"> Sorry,There are not any job posted by this company!!</p>
+                        @endif
                     </tbody>
                 </table>
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Testimonial;
 use App\User;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
@@ -26,6 +27,15 @@ $factory->define(User::class, function (Faker $faker) {
     ];
 });
 
+$factory->define(Testimonial::class, function (Faker $faker) {
+    return [
+        'content' => $faker->paragraph,
+        'name' =>"Manish Bhandari",
+        'profession'=>'Software Engineer',
+        'video_id' => '342979043',
+    ];
+});
+
 
 $factory->define(App\Company::class, function (Faker $faker) {
     return [
@@ -35,7 +45,7 @@ $factory->define(App\Company::class, function (Faker $faker) {
         'address'=>$faker->address,
         'phone'=>$faker->phoneNumber,
         'website'=>$faker->domainName,
-        'logo'=>'logo.jpg',
+        'logo'=>'logos.png',
         'cover_photo'=>'cover.png',
         'slogan'=>'learn-earn and grow',
         'description'=>$faker->paragraph

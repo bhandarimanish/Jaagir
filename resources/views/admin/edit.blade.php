@@ -1,23 +1,20 @@
-@extends('layouts.app')
+@extends('admin.layouts.master')
+
 @section('content')
-
-<div class="container">
-	@if(Session::has('message'))
-	<div class="alert alert-success">{{Session::get('message')}}</div>
-	@endif
-	<div class="row">
-		<div class="col-md-4">
-			      @include('admin.left-menu')
-
-		</div>
-		<div class="col-md-8">
-			<div class="card">
-				<div class="card-header">
-					Edit post
-				</div>
-				<div class="card-body">
-
-					<form action="{{route('post.update',[$post->id])}}" method="POST" enctype="multipart/form-data">@csrf
+<div class="container mt-5">
+	<nav aria-label="breadcumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item active " aria-current="page">Update Blog</li>
+		</ol>
+	</nav>
+	<div class="row justify-content-center">
+		<div class="col-md-12">
+			@if(Session::has('message'))
+			<div class="alert alert-success">
+				{{Session::get('message')}}
+			</div>
+			@endif
+			<form action="{{route('post.update',[$post->id])}}" method="POST" enctype="multipart/form-data">@csrf
 						<div class="form-group">
 							<label>Title</label>
 							<input type="text" name="title" class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}"value="{{$post->title}}">
@@ -39,7 +36,8 @@
 						<div class="form-group">
 							<label>Image</label>
 							<input type="file" name="image" class="form-control{{ $errors->has('image') ? ' is-invalid' : '' }}">
-							<img src="{{asset('storage/'.$post->image)}}" style="width: 100%;"> 
+							<br>
+							Existing image:<img src="{{asset('blogimages')}}/{{$post->image}}" width="60"> 
 							
 							 @if ($errors->has('image'))
                                     <span class="invalid-feedback" role="alert">
@@ -58,14 +56,7 @@
 							<button type="submit" class="btn btn-success">Update</button>
 						</div>
 					</form>
-				</div>
-
 		</div>
-
-
-
 	</div>
-
 </div>
-
 @endsection
