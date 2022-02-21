@@ -10,12 +10,13 @@ use App\Category;
 use Illuminate\Support\Facades\Auth;
 use App\Post;
 use App\Testimonial;
+use App\User;
 
 class JobController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['employer', 'verified'], ['except' => array('index', 'show', 'apply', 'allJobs', 'searchJobs')]);
+        $this->middleware(['employer', 'verified'], ['except' => array('index', 'show', 'apply', 'allJobs', 'searchJobs', 'internship', 'allinternship')]);
     }
 
     public function index()
@@ -23,9 +24,9 @@ class JobController extends Controller
         $jobs = Job::latest()->whereDate('last_date', '>', date('Y-m-d'))->limit(5)->where('status', 1)->get();
         $companies = Company::get()->random(8);
         $categories = Category::with('jobs')->get();
-        $posts = Post::where('status',1)->get();
-        $testimonial=Testimonial::orderBy('id','desc')->first();
-        return view('welcome', compact('jobs', 'companies', 'categories','posts','testimonial'));
+        $posts = Post::where('status', 1)->get();
+        $testimonial = Testimonial::orderBy('id', 'desc')->first();
+        return view('welcome', compact('jobs', 'companies', 'categories', 'posts', 'testimonial'));
     }
 
     /**
@@ -91,7 +92,6 @@ class JobController extends Controller
     {
 
         $jobRecommendations = $this->jobRecommendations($job);
-
         return view('jobs.show', compact('job', 'jobRecommendations'));
     }
 
@@ -104,7 +104,7 @@ class JobController extends Controller
             ->whereDate('last_date', '>', date('Y-m-d'))
             ->where('id', '!=', $job->id)
             ->where('status', 1)
-            ->limit(6)
+            ->limit(10)
             ->get();
         array_push($data, $jobsBasedOnCategories);
 
@@ -113,14 +113,14 @@ class JobController extends Controller
             ->whereDate('last_date', '>', date('Y-m-d'))
             ->where('id', '!=', $job->id)
             ->where('status', 1)
-            ->limit(6)
+            ->limit(10)
             ->get();
         array_push($data, $jobBasedOnCompany);
 
         $jobBasedOnPosition = Job::where('position', 'LIKE', '%' . $job->position . '%')
             ->where('id', '!=', $job->id)
             ->where('status', 1)
-            ->limit(6);
+            ->limit(10);
         array_push($data, $jobBasedOnPosition);
         $collection  = collect($data);
         $unique = $collection->unique("id");
@@ -152,7 +152,7 @@ class JobController extends Controller
     {
         $job = Job::find($id);
         $job->update($request->all());
-        return redirect()->back()->with('message', 'Job updated successfully!');
+        return redirect()->route('job.mine')->with('message', "Job updated successfully!");
     }
 
     /**
@@ -183,6 +183,23 @@ class JobController extends Controller
     {
         $applicants = Job::has('users')->where('user_id', auth()->user()->id)->get();
         return view('jobs.applicants', compact('applicants'));
+    }
+
+    public function jobstatus(Request $request, $id)
+    {
+        $jobId = Job::find($id);
+        $status=$request->status;
+        $userid=$request->userid;
+        $description=$request->description;
+        $jobId->users()->detach($userid);
+        $jobId->users()->attach($userid, ['status' => $status,'description'=>$description]);
+        return redirect()->back()->with('message', 'Application has been updated!');
+    }
+
+    public function applicantview($id)
+    {
+        $user = User::findorfail($id);
+        return view('jobs.applicantsview', compact('user'));
     }
 
     public function allJobs(Request $request)
@@ -217,7 +234,7 @@ class JobController extends Controller
             return view('jobs.alljobs', compact('jobs'));
         } else {
 
-            $jobs = Job::latest()->paginate(20);
+            $jobs = Job::latest()->where('type', 'fulltime')->orWhere('type', 'parttime')->paginate(20);
             return view('jobs.alljobs', compact('jobs'));
         }
     }
@@ -230,4 +247,28 @@ class JobController extends Controller
             ->limit(5)->get();
         return response()->json($job);
     }
+
+    public function internship(Request $request)
+    {
+        $keyword = $request->get('position');
+        $type = $request->get('type');
+        $roles = $request->get('roles');
+        $category = $request->get('category_id');
+        $address = $request->get('address');
+        if ($keyword || $type || $category || $address || $roles) {
+            $internships = Job::where('position', 'LIKE', '%' . $keyword . '%')
+                ->Where('type', $type)
+                ->orWhere('category_id', $category)
+                ->orWhere('address', $address)
+                ->orWhere('roles', $roles)
+                ->paginate(20);
+
+            return view('jobs.internship', compact('internships'));
+        } else {
+
+            $internships = Job::latest()->limit(5)->where('status', 1)->where('type', 'internship')->paginate(10);
+            return view('jobs.internship', compact('internships'));
+        }
+    }
+
 }

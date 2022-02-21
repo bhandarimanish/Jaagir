@@ -10,7 +10,7 @@
                   <span class="icon-wrap">
                     <span class="icon icon-play"></span>
                   </span>
-                  <img src="external/images/hero_2.jpg" alt="Image" class="img-fluid rounded">
+                  <img src="external/images/1.jpg" alt="Image" class="img-fluid rounded">
                 </a>
               </div>
             

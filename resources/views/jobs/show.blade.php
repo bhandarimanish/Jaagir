@@ -1,5 +1,20 @@
+<style>
+  .banner_image {
+    background-image: url('/external/images/vacancy.jpg');
+    height: 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+  }
+</style>
 @extends('layouts.main')
 @section('content')
+<div class="banner_image">
+  <div class="content">
+    <h4 style="color: white;"><a href="/"> Home </a>/Job Details</h4>
+  </div>
+</div>
 <div class="album text-muted">
   <div class="container">
     @if(Session::has('message'))
@@ -18,155 +33,168 @@
         @endforeach
       </ul>
     </div>
-
     @endif
-
     <div class="row" id="app">
-      <div class="title" style="margin-top: 20px;">
-        <h2>{{$job->title}}</h2>
-
+      <div class="col-md-12 mt-5 mx-auto text-center mb-5 section-heading">
+        <h2 style="font-family: cursive;">{{Illuminate\Support\Str::limit($job->title,70)}}</h2>
       </div>
 
-      @if(empty($company->cover_photo))
-      <img src="{{asset('companycoverphoto/cover.png')}}" style="width: 100%;height:200px">
-      @else
-      <img src="{{asset('companycoverphoto')}}/{{$company->cover_photo}}" style="width: 100%;height:200px">
-      @endif
-
-      <div class="col-lg-8">
-
-
-        <div class="p-4 mb-8 bg-white">
+      <div class="col-lg-8 mt-3 bg-white">
+        <div class="p-4 mb-8 bg-light">
           <!-- icon-book mr-3-->
           <h3 class="h5 text-black mb-3"><i class="fa fa-book" style="color: blue;">&nbsp;</i>Description <a href="#" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-envelope-square" style="font-size: 40px;float:right;color:green;"></i></a></h3>
-          <p> {{$job->description}}.</p>
-
+          <p> {!!$job->description!!}</p>
+          <hr>
         </div>
-        <div class="p-4 mb-8 bg-white">
+        <div class="p-4 mb-8 bg-light">
           <!--icon-align-left mr-3-->
           <h3 class="h5 text-black mb-3"><i class="fa fa-user" style="color: blue;">&nbsp;</i>Roles and Responsibilities</h3>
-          <p>{{$job->roles}} .</p>
-
+          <p>{!!$job->roles!!}</p>
+          <hr>
         </div>
-        <div class="p-4 mb-8 bg-white">
+        <div class="p-4 mb-8 bg-light">
           <h3 class="h5 text-black mb-3"><i class="fa fa-users" style="color: blue;">&nbsp;</i>Number of vacancy</h3>
           <p>{{$job->number_of_vacancy }} .</p>
-
+          <hr>
         </div>
-        <div class="p-4 mb-8 bg-white">
+        <div class="p-4 mb-8 bg-light">
           <h3 class="h5 text-black mb-3"><i class="fa fa-clock-o" style="color: blue;">&nbsp;</i>Experience</h3>
           <p>{{$job->experience}}&nbsp;years</p>
-
+          <hr>
         </div>
-        <div class="p-4 mb-8 bg-white">
+        <div class="p-4 mb-8 bg-light">
           <h3 class="h5 text-black mb-3"><i class="fa fa-venus-mars" style="color: blue;">&nbsp;</i>Gender</h3>
           <p>{{$job->gender}} </p>
-
+          <hr>
         </div>
-        <div class="p-4 mb-8 bg-white">
+        <div class="p-4 mb-8 bg-light">
           <h3 class="h5 text-black mb-3"><i class="fa fa-dollar" style="color: blue;">&nbsp;</i>Salary</h3>
           <p>{{$job->salary}}</p>
+          <hr>
         </div>
-
       </div>
 
 
-      <div class="col-md-4 p-4 site-section bg-light">
-        <h3 class="h5 text-black mb-3 text-center">Short Info</h3>
-        <p>Company name:{{$job->company->cname}}</p>
-        <p>Address:{{$job->address}}</p>
-        <p>Employment Type:{{$job->type}}</p>
-        <p>Position:{{$job->position}}</p>
-        <p>Posted:{{$job->created_at->diffForHumans()}}</p>
-        <p>Last date to apply:{{ date('F d, Y', strtotime($job->last_date)) }}</p>
+      <div class="col-md-4 p-4 site-section bg-light mt-3">
+        <h3 class="text-black mb-3 text-center">Short Info</h3>
+        <hr>
+        <p><strong> Name:</strong>{{$job->company->cname}}</p>
+        <p><strong>Address:</strong>{{$job->address}}</p>
+        <p><strong>Employment Type:</strong>{{$job->type}}</p>
+        <p><strong>Position:</strong>{{$job->position}}</p>
+        <p><strong>Posted:</strong>{{$job->created_at->diffForHumans()}}</p>
+        <p><strong>Last date to apply:</strong>{{ date('F d, Y', strtotime($job->last_date)) }}</p>
 
 
 
         <p><a href="{{route('company.index',[$job->company->id,$job->company->slug])}}" class="btn btn-warning" style="width: 100%;">Visit Company Page</a></p>
         <p>
-          @if(Auth::check()&&Auth::user()->user_type=='seeker'&&Auth::user()->email_verified_at)
+          @if(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->profile->address)
+        <p style="color: red; font-weight:600;text-align:center">To apply, Please update your profile first.</p>
+        @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->profile->resume)
+        <p style="color: red; font-weight:600;text-align:center">To apply, Please update your resume.</p>
+        @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->profile->cover_letter)
+        <p style="color: red; font-weight:600;text-align:center">To apply, Please update your coverletter.</p>
+        @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&Auth::user()->email_verified_at)
 
-          @if(!$job->checkApplication())
+        @if(!$job->checkApplication())
 
-          <apply-component :jobid={{$job->id}}></apply-component>
-          @else
-          <center><span style="color:green;">You applied for this job!!</span></center>
-          @endif
-          <br>
-          <favorite-component :jobid={{$job->id}} :favorited={{$job->checkSaved()?'true':'false'}}></favorite-component>
-          @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->email_verified_at)
+        <apply-component :jobid={{$job->id}}></apply-component>
+        @else
+        <center><span style="color:green;">You applied for this job!!</span></center>
+        @endif
+        <br>
+        <favorite-component :jobid={{$job->id}} :favorited={{$job->checkSaved()?'true':'false'}}></favorite-component>
+        @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->email_verified_at)
         <p style="color: red; font-weight:600;text-align:center">Please verify to apply for this job</p>
         @elseif(Auth::check()&&Auth::user()->user_type=='employer')
+        <p></p>
+        @elseif(Auth::check()&&Auth::user()->user_type=='admin')
         <p></p>
         @else
         <p style="color: red; font-weight:600;text-align:center">Please login to apply for this job</p>
         @endif
-
         </p>
-
-      </div>
-
-      @foreach($jobRecommendations as $jobRecommendation)
-      <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <p class="badge badge-success">{{$jobRecommendation->type}}</p>
-          <h5 class="card-title">{{$jobRecommendation->position}}</h5>
-          <p class="card-text">{{\Illuminate\Support\Str::limit($jobRecommendation->description,90)}}
-            <center> <a href="{{route('jobs.show',[$jobRecommendation->id,$jobRecommendation->slug])}}" class="btn btn-success">Apply</a></center>
-        </div>
-      </div>
-      @endforeach
-
-
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Send job to your friend</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <form action="{{route('mail')}}" method="POST">@csrf
-
-              <div class="modal-body">
-                <input type="hidden" name="job_id" value="{{$job->id}}">
-                <input type="hidden" name="job_slug" value="{{$job->slug}}">
-
-                <div class="form-goup">
-                  <label>Your name * </label>
-                  <input type="text" name="your_name" class="form-control" required="">
-                </div>
-                <div class="form-goup">
-                  <label>Your email *</label>
-                  <input type="email" name="your_email" class="form-control" required="">
-                </div>
-                <div class="form-goup">
-                  <label>Person name *</label>
-                  <input type="text" name="friend_name" class="form-control" required="">
-                </div>
-                <div class="form-goup">
-                  <label>Person email *</label>
-                  <input type="email" name="friend_email" class="form-control" required="">
-                </div>
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Mail this job</button>
-              </div>
-            </form>
-          </div>
-        </div>
       </div>
     </div>
-
-
-    <br>
-    <br>
-    <br>
-
   </div>
+</div>
+
+
+    <div class="col-md-6 mt-4 mx-auto text-center mb-5 section-heading">
+      <h2 style="font-family: cursive;">Recommended Jobs</h2>
+    </div>
+@if(count($jobRecommendations)>0)
+@foreach($jobRecommendations as $jobRecommendation)
+<div class="row">
+<div class="container">
+  <div class="col-sm-6 col-md-4 col-lg-3 mb-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
+    <div class="card feature-item">
+      <div class="badge badge-warning">{{$jobRecommendation->type}}</div>
+      <h4 class="card-title mt-2">{{Illuminate\Support\Str::limit($jobRecommendation->company->cname,14)}}</h4>
+      <p class="card-text font-weight-bold">{{Illuminate\Support\Str::limit($jobRecommendation->position,20)}}</p>
+      @if ($jobRecommendation->last_date < Carbon\Carbon::now())
+        <p class="badge badge-danger">expired</p>
+        @endif
+        <center> <a href="{{route('jobs.show',[$jobRecommendation->id,$jobRecommendation->slug])}}" class="btn btn-success">Apply</a></center>
+    </div>
+  </div>
+</div>
+</div>
+@endforeach
+
+@else
+<p class="col-md-6 mt-4 mx-auto text-center mb-5 section-heading" style="color: red;">Sorry, No Recommended Jobs Found!!</p>
+@endif
+<!-- Modal -->
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Send job to your friend</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="{{route('mail')}}" method="POST">@csrf
+
+        <div class="modal-body">
+          <input type="hidden" name="job_id" value="{{$job->id}}">
+          <input type="hidden" name="job_slug" value="{{$job->slug}}">
+
+          <div class="form-goup">
+            <label>Your name * </label>
+            <input type="text" name="your_name" class="form-control" required="" value="{{Auth::check()&&Auth::user()->name}}">
+          </div>
+          <div class="form-goup">
+            <label>Your email *</label>
+            <input type="email" name="your_email" class="form-control" required="" value="{{Auth::check()&&Auth::user()->email}}">
+          </div>
+          <div class="form-goup">
+            <label>Person name *</label>
+            <input type="text" name="friend_name" class="form-control" required="">
+          </div>
+          <div class="form-goup">
+            <label>Person email *</label>
+            <input type="email" name="friend_email" class="form-control" required="">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Mail this job</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<br>
+<br>
+<br>
+
+</div>
 </div>
 @endsection

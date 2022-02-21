@@ -8,40 +8,47 @@
     <div class="site-mobile-menu-body"></div>
   </div> <!-- .site-mobile-menu -->
 
-
-  <div class="site-navbar-wrap js-site-navbar bg-white">
+  <div class="row" style="background-color:#f0f6fa;">
     <div class="container">
       <div class="site-navbar bg-light">
         <div class="py-1">
-          <div class="row align-items-center">
+          <div class="row align-items-center" style="background-color: #f0f6fa;">
             <div class="col-2">
-              <h2 class="mb-0 site-logo"><a href="/">Jaagir</a></h2>
+              <a href="/"><img src="{{asset('avatar/logos.png')}}" alt="" height="80" width="200"></a>
             </div>
             <div class="col-10">
               <nav class="site-navigation text-right" role="navigation">
                 <div class="container">
                   <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
-                  <ul class="site-menu js-clone-nav d-none d-lg-block">
+                  <ul class="site-menu js-clone-nav d-none d-lg-block" style="font-family:Work Sans;font-weight: 600;font-stretch: extra-expanded">
                     @guest
                     <li><a href="/register">For Job seeker</a></li>
                     <li>
                       <a href="{{route('employer.register')}}">For Employer</a>
 
                     </li>
+                    <li>
+                      <a href="{{route('internship')}}">Internship</a>
+
+                    </li>
                     <li><a href="{{route('company')}}">Company</a></li>
                     @endguest
                     @if(Auth::check()&&Auth::user()->user_type=='seeker'&&Auth::user()->email_verified_at)
-                    <li><a href="/home">Dashboard</li>
+                    <li> <a href="{{route('internship')}}">Internship</a> </li>
+                    <li> <a href="{{route('myjob.user')}}">My jobs</a> </li>
+                    <li><a href="/home">Dashboard</a></li>
                     <li><a href="{{route('user.profile')}}">Profile</li>
                     @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->email_verified_at)
                     <li style="color: red;">Please, first verify your email!!</li>
                     <li><a href="/home">Dashboard</li>
+                    @elseif(Auth::check()&&Auth::user()->user_type=='admin')
+                    <li><a href="/dashboard">Dashboard</li>
                     @endif
                     @if(Auth::check()&&Auth::user()->user_type=='employer'&&Auth::user()->email_verified_at)
                     <li><a href="{{route('company.profile')}}">Update Profile</a></li>
                     <li><a href="{{route('job.applicant')}}">Applicants</a></li>
                     <li><a href="{{route('job.mine')}}">My Jobs</a></li>
-                    <a class="btn btn-warning text-white rounded" href="{{route('job.create')}}">Post a Job</a></li>
+                    <li><a href="{{route('job.create')}}" class="btn btn-warning text-white">Post a Job</a></li>
                     @endif
 
                     <li>
@@ -51,21 +58,15 @@
                         Login
                       </button>
                       @else
-                      <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}
+                      <a href="{{ route('logout') }}" class="btn btn-danger text-white rounded text-center" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();" style="background-color:#de0202;">
+                        Logout &nbsp;
                       </a>
                       <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                       </form>
 
                       @endif
-
-
-
-
-
-
                     </li>
                   </ul>
                 </div>

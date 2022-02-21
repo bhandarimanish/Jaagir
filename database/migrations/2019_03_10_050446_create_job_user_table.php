@@ -17,7 +17,8 @@ class CreateJobUserTable extends Migration
             $table->bigIncrements('id');
             $table->integer('job_id');
             $table->integer('user_id');
-
+            $table->string('description');
+            $table->integer('status')->default(-1);
             $table->timestamps();
         });
     }

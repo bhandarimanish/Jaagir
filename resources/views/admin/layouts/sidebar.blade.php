@@ -4,6 +4,10 @@
             <div class="sb-sidenav-menu">
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">Welcome</div>
+                    <a class="nav-link" href="/">
+                        <div class="sb-nav-link-icon"><i class="fas fa-blog"></i></div>
+                        Go to Jaagir
+                    </a>
                     <a class="nav-link" href="/dashboard">
                         <div class="sb-nav-link-icon"><i class="fas fa-blog"></i></div>
                         Blog

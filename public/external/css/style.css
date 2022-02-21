@@ -663,10 +663,10 @@ a {
     border-bottom: none !important; }
   .jobs-wrap .job-item.fulltime {
     border-left: 3px solid #26baee; }
-  .jobs-wrap .job-item.freelance {
-    border-left: 3px solid #f8b500; }
+  .jobs-wrap .job-item.internship {
+    border-left: 3px solid  #f23a2e;; }
   .jobs-wrap .job-item.partime {
-    border-left: 3px solid #f23a2e; }
+    border-left: 3px solid #f8b500 }
   .jobs-wrap .job-item .company-logo {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 100px;
@@ -955,3 +955,48 @@ a {
     background: #2374e1;
     color: #fff;
     border: 1px solid transparent; }
+
+
+  .feature-item {
+    border-radius: 2px;
+    height: 220px;
+    width: 250px;
+}
+
+.feature-item:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    background-color: #ffffff;
+}
+
+.banner_image .content {
+  position: absolute;
+  bottom: 0;
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.5);
+  color: #f1f1f1;
+  width: 100%;
+  padding: 20px;
+}
+@media screen and (max-width: 600px) {
+  .card{
+      width: 100%;
+      display: block;
+      margin-bottom: 20px;
+  }
+
+  .category
+  {
+    text-align: center;
+    justify-content: center;
+  }
+
+  .banner_image{
+      height: 200px;
+  }
+  .banner_image .content{
+    padding:15px;
+  }
+}
+
+
+    
