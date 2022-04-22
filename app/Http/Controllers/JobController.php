@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Post;
 use App\Testimonial;
 use App\User;
+use Mail;
+use DB;
+use App\Mail\JobStatus;
 
 class JobController extends Controller
 {
@@ -36,7 +39,11 @@ class JobController extends Controller
      */
     public function create()
     {
-        return view('jobs.create');
+        $applicants = Job::has('users')->get();
+        foreach ($applicants as $applicant) {
+            $count = \DB::table('job_user')->where('job_id', $applicant->id)->where('status', -1)->count();
+        }
+        return view('jobs.create', compact('count'));
     }
 
     /**
@@ -55,7 +62,7 @@ class JobController extends Controller
             'position' => 'required',
             'last_date' => 'required',
             'number_of_vacancy' => 'required|numeric',
-            'experience' => 'required|numeric'
+            'experience' => 'required|numeric',
         ]);
         $user_id = auth()->user()->id;
         $company = Company::where('user_id', $user_id)->first();
@@ -76,7 +83,8 @@ class JobController extends Controller
             'number_of_vacancy' => request('number_of_vacancy'),
             'gender' => request('gender'),
             'experience' => request('experience'),
-            'salary' => request('salary')
+            'salary' => request('salary'),
+            'resources' => request('resources')
 
         ]);
         return redirect()->back()->with('message', 'Job created successfully!');
@@ -89,14 +97,6 @@ class JobController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id, Job $job)
-    {
-
-        $jobRecommendations = $this->jobRecommendations($job);
-        return view('jobs.show', compact('job', 'jobRecommendations'));
-    }
-
-
-    public function jobRecommendations($job)
     {
         $data = [];
 
@@ -120,13 +120,14 @@ class JobController extends Controller
         $jobBasedOnPosition = Job::where('position', 'LIKE', '%' . $job->position . '%')
             ->where('id', '!=', $job->id)
             ->where('status', 1)
-            ->limit(10);
+            ->limit(10)
+            ->get();
         array_push($data, $jobBasedOnPosition);
-        $collection  = collect($data);
-        $unique = $collection->unique("id");
-        $jobRecommendations =  $unique->values()->first();
-        return $jobRecommendations;
+        $data  = collect($data);
+        $jobRecommendations = $data->unique('id')->values()->first();
+        return view('jobs.show', compact('job', 'jobRecommendations'));
     }
+
 
 
     /**
@@ -163,7 +164,9 @@ class JobController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $jobs = Job::find($id);
+        $jobs->delete();
+        return redirect()->back()->with('messages', 'Job has been deleted successfully');
     }
 
     public function myjob()
@@ -181,19 +184,43 @@ class JobController extends Controller
 
     public function applicant()
     {
-        $applicants = Job::has('users')->where('user_id', auth()->user()->id)->get();
+
+        $applicants = Job::has('users')->get();
         return view('jobs.applicants', compact('applicants'));
     }
 
     public function jobstatus(Request $request, $id)
     {
         $jobId = Job::find($id);
-        $status=$request->status;
-        $userid=$request->userid;
-        $description=$request->description;
-        $jobId->users()->detach($userid);
-        $jobId->users()->attach($userid, ['status' => $status,'description'=>$description]);
-        return redirect()->back()->with('message', 'Application has been updated!');
+        $status = $request->status;
+        $userid = $request->userid;
+        $applicantId = User::find($userid);
+        $companyname = $jobId->company->cname;
+        $description = $request->description;
+        $applicantname = $applicantId->name;
+        $jobname = $jobId->name;
+        $homeUrl = url('/');
+        $jobSlug = $jobId->slug;
+        $jobUrl = $homeUrl . '/' . 'jobs/' . $id . '/' . $jobSlug;
+        $data = array(
+            'company_name' => $companyname,
+            'status' => $status,
+            'description' => $description,
+            'name' => $applicantname,
+            'jobname' => $jobname,
+            'jobUrl' => $jobUrl
+        );
+
+        $applicantemail = $applicantId->email;
+        try {
+            Mail::to($applicantemail)->send(new JobStatus($data));
+            return redirect()->back()->with('message', 'Status changed and Mail sent to ' . $applicantemail);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('err_message', 'Sorry, Something went wrong.Please try later');
+        } finally {
+            $jobId->users()->detach($userid);
+            $jobId->users()->attach($userid, ['status' => $status, 'description' => $description]);
+        }
     }
 
     public function applicantview($id)
@@ -265,10 +292,36 @@ class JobController extends Controller
 
             return view('jobs.internship', compact('internships'));
         } else {
+            $numbers = Job::where('type', 'internship')->inRandomOrder()->pluck('id');
+            $array_size = count($numbers);
 
-            $internships = Job::latest()->limit(5)->where('status', 1)->where('type', 'internship')->paginate(10);
+            for ($i = 0; $i < $array_size; $i++) {
+                for ($j = 0; $j < $array_size; $j++) {
+                    if ($numbers[$i] < $numbers[$j]) {
+                        $temp = $numbers[$i];
+                        $numbers[$i] = $numbers[$j];
+                        $numbers[$j] = $temp;
+                    }
+                }
+            }
+            function bubble_Sort($my_array)
+            {
+                do {
+                    $swapped = false;
+                    for ($i = 0, $c = count($my_array) - 1; $i < $c; $i++) {
+                        if ($my_array[$i] > $my_array[$i + 1]) {
+                            list($my_array[$i + 1], $my_array[$i]) =
+                                array($my_array[$i], $my_array[$i + 1]);
+                            $swapped = true;
+                        }
+                    }
+                } while ($swapped);
+                return $my_array;
+            }
+            $test_array = Job::where('type', 'internship')->pluck('id');
+            $data = bubble_Sort($test_array);
+            $internships = Job::whereIn('id', $data)->where('status', 1)->paginate(10);
             return view('jobs.internship', compact('internships'));
         }
     }
-
 }

@@ -117,12 +117,23 @@
 
             <div class="form-group">
                 <label for="type">Type:</label>
-                <select class="form-control" name="type">
+                <select class="form-control" name="type" id="available">
                     <option value="fulltime"{{$job->type=='fulltime'?'selected':''}}>fulltime</option>
                     <option value="partime"{{$job->type=='partime'?'selected':''}}>partime</option>
                     <option value="internship"{{$job->type=='internship'?'selected':''}}>internship</option>
                 </select>
             </div>
+
+            <div class="form-group" id="business" style="display: none;">
+                <label for="role">Resources:</label>
+            <textarea name="resources" class="summernote form-control {{ $errors->has('resources') ? ' is-invalid' : '' }}" >{{ $job->resources }}</textarea>
+            @if ($errors->has('resources'))
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $errors->first('resources') }}</strong>
+                </span>
+                 @endif
+            </div>
+
             <div class="form-group">
                 <label for="status">Status:</label>
                 <select class="form-control" name="status">
@@ -130,6 +141,8 @@
                 <option value="0"{{$job->status=='0'?'selected':''}}>Draft</option>
                 </select>
             </div>
+
+
             <div class="form-group">
                 <label for="lastdate">Last date:</label>
                 <input type="date" name="last_date" class="form-control" value="{{ $job->last_date }}">
@@ -164,6 +177,18 @@
   var text = $('#text');
   text.summernote(options);
   text.summernote('code',text.text());
+</script>
+
+<script type="text/javascript">
+    $(function() {
+        $("#available").change(function() {
+            if ($(this).val() == "internship") {
+                $("#business").show();
+            } else {
+                $("#business").hide();
+            }
+        });
+    });
 </script>
 @endsection
 

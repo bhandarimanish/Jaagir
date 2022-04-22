@@ -4,14 +4,15 @@
   td {
     border: 1px solid black;
   }
-   .banner_image {
-  background-image: url('/external/images/applicants.jpg');
-  height: 70%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: relative;
-}
+
+  .banner_image {
+    background-image: url('/external/images/applicants.jpg');
+    height: 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+  }
 </style>
 @extends('layouts.main')
 @section('content')
@@ -20,10 +21,14 @@
   {{Session::get('message')}}
 </div>
 @endif
+
+@if(Session::has('err_message'))
+<div class="alert alert-danger">{{Session::get('err_message')}}</div>
+@endif
 <div class="banner_image">
-    <div class="content">
-        <h4 style="color: white;"><a href="/" style="color: yellow;"> Home </a>/Applicants</h4>
-    </div>
+  <div class="content">
+    <h4 style="color: white;"><a href="/" style="color: yellow;"> Home </a>/Applicants</h4>
+  </div>
 </div>
 <div class="applicants">
   <div class="row justify-content-center">
@@ -34,7 +39,8 @@
       <div class="card" style="overflow-x:auto;">
         @if(count($applicants)>0)
         @foreach($applicants as $applicant)
-        <div class="card-header font-weight-bold "><a href="{{route('jobs.show',[$applicant->id,$applicant->slug])}}"> {{$applicant->title}}</a></div>
+        <hr style="border:1px dashed blue">
+        <div class="card-header font-weight-bold text-center mt-4" style="background-color: #c7c7c7;"><a href="{{route('jobs.show',[$applicant->id,$applicant->slug])}}" class="font-weight-bold"> {{$applicant->title}}</a>&nbsp; Applicants</div>
         @foreach($applicant->users as $user)
         <table class="table">
           <thead class="thead-light">

@@ -5,7 +5,7 @@
         <button v-if="show" type="submit" class="btn btn-success" style="width: 100%;">Apply</button>
 
         <div v-else class="alert alert-success">
-            Application sent successfully
+            Congratulations,You applied this job!!
         </div>
         </form>
         
@@ -27,7 +27,6 @@
             formSubmit(e){
                 e.preventDefault();
                 axios.post('/applications/'+ this.jobid,{
-
                 }).then((response)=>{
                     this.show=false
 

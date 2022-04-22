@@ -138,17 +138,15 @@
               </div>
             </div>
 
-            <div class="form-group row mb-0">
+            <!-- <div class="form-group row mb-0">
               <div class="col-md-8 col-form-label text-md-left">
-
-
                 @if (Route::has('password.request'))
                 <a class="btn-link" href="{{ route('password.request') }}">
                   {{ __('Forgot Your Password?') }}
                 </a>
                 @endif
               </div>
-            </div>
+            </div> -->
 
 
 
@@ -165,3 +163,13 @@
       </div>
     </div>
   </div>
+
+  @if(isset($errors)&&count($errors)>0)
+    <div class="alert alert-danger">
+      <ul>
+        @foreach($errors->all() as $error)
+        <li>{{$error}}</li>
+        @endforeach
+      </ul>
+    </div>
+    @endif

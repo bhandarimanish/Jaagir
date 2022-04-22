@@ -17,6 +17,7 @@
 </div>
 <div class="col-md-6 mt-4 mx-auto text-center mb-5 section-heading">
     <h2 style="font-family: cursive;">Job Creation</h2>
+
 </div>
 
 <div class="container mb-3">
@@ -26,6 +27,11 @@
             <div class="alert alert-success">
                 {{Session::get('message')}}
             </div>
+            @endif
+            @if(Auth::check()&&Auth::user()->user_type=='employer'&&!Auth::user()->company->address)
+            <p style="color: red; font-weight:600;text-align:center">To create the job, Please update your profile first.</p>
+            @elseif($count!==0)
+            <p style="color: red; font-weight:600;text-align:center">Please accept/reject applicants of previous job to create new one!</p>
             @endif
             <div class="card bg-light">
                 <div class="card-header font-weight-bold  text-center">Create a job</div>
@@ -99,7 +105,7 @@
 
                         <div class="form-group">
                             <label for="number_of_vacancy">No of vacancy:</label>
-                            <input type="text" name="number_of_vacancy" class="form-control{{ $errors->has('number_of_vacancy') ? ' is-invalid' : '' }}" value="{{ old('number_of_vacancy') }}">
+                            <input type="number" name="number_of_vacancy" class="form-control{{ $errors->has('number_of_vacancy') ? ' is-invalid' : '' }}" value="{{ old('number_of_vacancy') }}">
                             @if ($errors->has('number_of_vacancy'))
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('number_of_vacancy') }}</strong>
@@ -109,7 +115,7 @@
 
                         <div class="form-group">
                             <label for="experience">Year of experience:</label>
-                            <input type="text" name="experience" class="form-control{{ $errors->has('experience') ? ' is-invalid' : '' }}" value="{{ old('experience') }}">
+                            <input type="number" name="experience" class="form-control{{ $errors->has('experience') ? ' is-invalid' : '' }}" value="{{ old('experience') }}">
                             @if ($errors->has('experience'))
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('experience') }}</strong>
@@ -141,12 +147,23 @@
 
                         <div class="form-group">
                             <label for="type">Available for:</label>
-                            <select class="form-control" name="type">
+                            <select class="form-control" name="type" id="available">
                                 <option value="fulltime">fulltime</option>
                                 <option value="parttime">parttime</option>
                                 <option value="internship">internship</option>
                             </select>
                         </div>
+
+                        <div class="form-group" id="business" style="display: none;">
+                            <label >Resources *:</label>
+                            <textarea name="resources" class="summernote form-control {{ $errors->has('resources') ? ' is-invalid' : '' }}">{{ old('resources') }}</textarea>
+                            @if ($errors->has('resources'))
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('resources') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+
                         <div class="form-group">
                             <label for="status">Status:</label>
                             <select class="form-control" name="status">
@@ -163,13 +180,19 @@
                             </span>
                             @endif
                         </div>
-
+                        @if(Auth::check()&&Auth::user()->user_type=='employer'&&!Auth::user()->company->address)
+                        <p style="color: red; font-weight:600;">Please update your profile first.</p>
+                        <button class="btn btn-danger" disabled>Submit</button>
+                        @elseif($count!==0)
+                        <p style="color: red; font-weight:600;">Please accept/reject applicants of previous job to create new one!</p>
+                        <button class="btn btn-danger" disabled>Submit</button>
+                        @else
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button class="btn btn-success" type="submit">Submit</button>
                         </div>
-
+                        @endif
+                        </form>
                 </div>
-                </form>
             </div>
         </div>
     </div>
@@ -184,4 +207,16 @@
     });
 </script>
 
+
+<script type="text/javascript">
+    $(function() {
+        $("#available").change(function() {
+            if ($(this).val() == "internship") {
+                $("#business").show();
+            } else {
+                $("#business").hide();
+            }
+        });
+    });
+</script>
 @endsection

@@ -3,8 +3,11 @@
     <div class="row">
       <div class="col-md-4">
         <h3 class="footer-heading mb-4 text-white">About</h3>
-        <p>Jaagir aims to make aspiring individuals to find the right and perfect jobs they are dreaming of.It also helps employers to find the right candidate for the tasks they want to assign and help their organization grow
-        <p><a href="#main" class="btn btn-primary pill text-white px-4">Read More</a></p>
+        <p>Jaagir aims to make aspiring individuals to find the right and perfect jobs they are dreaming of.</p>
+        <p class="collapse" id="collapseExample">
+        It also helps employers to find the right candidate for the tasks they want to assign and help their organization grow
+        </p>
+        <p><a href="#main" class="btn btn-primary pill text-white px-4 hide-me" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Read More</a></p>
       </div>
       <div class="col-md-6">
         <div class="row">
@@ -18,7 +21,7 @@
           </div>
           <div class="col-md-6">
             <h3 class="footer-heading mb-4 text-white">Categories</h3>
-            <?php $categories=App\Category::take(4)->get(); ?>
+            <?php $categories = App\Category::take(4)->get(); ?>
             @foreach($categories as $category)
             <ul class="list-unstyled">
               <li><a href="{{route('category.index',[$category->id])}}">{{$category->name}}</a></li>
@@ -51,7 +54,7 @@
           Copyright &copy; <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
           <script>
             document.write(new Date().getFullYear());
-          </script> All Rights Reserved | This website belongs to  Jaagir <i class="icon-heart text-warning" aria-hidden="true"></i> 
+          </script> All Rights Reserved | This website belongs to Jaagir <i class="icon-heart text-warning" aria-hidden="true"></i>
           <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
         </p>
       </div>
@@ -85,13 +88,9 @@
   });
 </script>
 
-
-
-
-
-
-
-
+<style>
+  .hide-me[aria-expanded="true"] {display: none;}
+</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {

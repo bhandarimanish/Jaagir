@@ -40,12 +40,13 @@
 
             <a href="{{route('jobs.show',[$job->id,$job->slug])}}" class="job-item mb-2 d-block d-md-flex
    align-items-center  border-bottom @if($job->type=='parttime') 
-   parttime @elseif($job->type=='fulltime')fulltime @else internship   @endif;">
+   partime @elseif($job->type=='fulltime')fulltime @else internship   @endif;
+   ">
               <div class="company-logo blank-logo text-center text-md-left pl-3">
                 @if(!empty($job->company->logo))
                 <img src="{{asset('companylogo')}}/{{$job->company->logo}}" alt="Image" class="img-fluid mx-auto">
                 @else
-                <img src="{{asset('companylogo/logo.jpg')}}" alt="Image" class="img-fluid mx-auto">
+                <img src="{{asset('companylogo/logos.png')}}" alt="Image" class="img-fluid mx-auto">
                 @endif
               </div>
               <div class="job-details h-100">

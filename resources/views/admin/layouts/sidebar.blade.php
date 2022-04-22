@@ -5,7 +5,7 @@
                 <div class="nav">
                     <div class="sb-sidenav-menu-heading">Welcome</div>
                     <a class="nav-link" href="/">
-                        <div class="sb-nav-link-icon"><i class="fas fa-blog"></i></div>
+                        <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
                         Go to Jaagir
                     </a>
                     <a class="nav-link" href="/dashboard">

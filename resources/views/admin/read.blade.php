@@ -1,12 +1,27 @@
+<style>
+   .banner_image {
+  background-image: url('/external/images/blog.jpg');
+  height: 70%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+</style>
 @extends('layouts.main')
 @section('content')
+<div class="banner_image">
+    <div class="content">
+        <h4 style="color: white;"><a href="/" style="color: yellow;"> Home </a>/Update Profile</h4>
+    </div>
+</div>
    <div class="album text-muted">
      <div class="container">
        <div class="row" id="app">
-          <div class="col-md-6 mx-auto text-center mb-5 section-heading">
+          <div class=" mt-5 col-md-6 mx-auto text-center mb-5 section-heading">
             <h2 class="mb-3" style="font-family: cursive;">{{$post->title}}</h2>
           </div>
-      <img src="{{asset('blogimages')}}/{{$post->image}}" class="mt-4" style="width: 100%;height:500px;">
+      <img src="{{asset('blogimages')}}/{{$post->image}}" class="mt-2" style="width: 100%;height:500px;">
           <div class="col-lg-12">
             <div class="p-4 mb-8 bg-white">
               <!-- icon-book mr-3-->

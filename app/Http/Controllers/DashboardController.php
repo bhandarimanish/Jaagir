@@ -126,4 +126,11 @@ class DashboardController extends Controller
 		$job->save();
 		return redirect()->back()->with('message', 'Status updated successfully');
 	}
+
+	public function delete($id)
+    {
+        $jobs = Job::find($id);
+        $jobs->delete();
+        return redirect()->back()->with('messages', 'Job has been deleted successfully');
+    }
 }

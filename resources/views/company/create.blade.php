@@ -16,7 +16,7 @@
     </div>
 </div>
 <div class="col-md-6 mt-4 mx-auto text-center mb-5 section-heading">
-            <h2 style="font-family: cursive;">Uodate Company Details</h2>
+            <h2 style="font-family: cursive;">Update Company Details</h2>
         </div>
 <div class="container mt-5">
     <div class="row">

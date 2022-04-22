@@ -23,16 +23,22 @@ class UserController extends Controller
     {
         $this->validate($request,[
             'address'=>'required',
-            'experience'=>'required|min:20',
-            'bio'=>'required|min:20',
-            'phone_number'=>'required|min:10|numeric',
+            'experience'=>'required',
+            'jobtitle'=>'required',
+            'skill'=>'required|min:20',
+            'phone_number'=>'required|min:10',
         ]);
         $user_id=auth()->user()->id;
         Profile::where('user_id',$user_id)->update([
             'address'=>request('address'),
+            'phone_number' => request('phone_number'),
+            'jobtitle' => request('jobtitle'),
             'experience'=>request('experience'),
-            'bio'=>request('bio'),
-            'phone_number'=>request('phone_number')
+            'skill'=>request('skill'),
+            'jobtitle'=>request('jobtitle'),
+            'jobtype'=>request('jobtype'),
+            'category' => request('category'),
+            'salary' => request('salary'),
         ]);
         return redirect()->back()->with('message','Profile updated successfully!');
     }

@@ -102,7 +102,6 @@
         @endif
       </div>
     </div>
-
     {{$internships->appends(Illuminate\Support\Facades\Request::except('page'))->links()}}
   </div>
 </div>

@@ -27,9 +27,13 @@
         @if(count($jobs)>0)
         @foreach($jobs as $job)
 
-        <a href="{{route('jobs.show',[$job->id,$job->slug])}}" class="job-item d-block d-md-flex align-items-center  border-bottom @if($job->type=='parttime') partime @elseif($job->type=='fulltime')fulltime @else freelance   @endif;">
+        <a href="{{route('jobs.show',[$job->id,$job->slug])}}" class="job-item d-block d-md-flex align-items-center  border-bottom @if($job->type=='parttime') partime @elseif($job->type=='fulltime')fulltime @else internship   @endif;">
           <div class="company-logo blank-logo text-center text-md-left pl-3">
-            <img src="{{asset('companylogo')}}/{{$job->company->logo}}" alt="Image" class="img-fluid mx-auto">
+          @if(!empty($job->company->logo))
+                <img src="{{asset('companylogo')}}/{{$job->company->logo}}" alt="Image" class="img-fluid mx-auto">
+                @else
+                <img src="{{asset('companylogo/logos.png')}}" alt="Image" class="img-fluid mx-auto">
+                @endif
           </div>
           <div class="job-details">
             <div class="p-3 align-self-center">

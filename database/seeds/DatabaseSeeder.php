@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         Category::truncate();
         factory('App\User',10)->create();
-        factory('App\Company',10)->create();
-        factory('App\Job',10)->create();
+        factory('App\Company',20)->create();
+        factory('App\Job',40)->create();
         factory('App\Testimonial',1)->create();
 
         $categories=[

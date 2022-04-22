@@ -39,9 +39,10 @@
                             <li class="list-group-item"><span>Email:</span>{{$user->email}}</li>
                             <li class="list-group-item"><span>Address:</span>{{$user->profile->address}}</li>
                             <li class="list-group-item"><span>Gender:</span>{{$user->profile->gender}}</li>
-                            <li class="list-group-item"><span>Bio:</span>{{$user->profile->bio}}</li>
-                            <li class="list-group-item"><span>Experience:</span>{{$user->profile->experience}}</li>
+                            <li class="list-group-item"><span>DOB:</span>{{$user->profile->dob}}</li>
+                            <li class="list-group-item"><span>Experience:</span>{{$user->profile->experience}} year</li>
                             <li class="list-group-item"><span>Phone:</span>{{$user->profile->phone_number}}</li>
+                            <li class="list-group-item"><span>Expected Salary:</span>{{$user->profile->salary}}</li>
                             <li class="list-group-item"><span>Cover Letter:</span> <a href="{{Storage::url($user->profile->cover_letter)}}" target="blank">Cover letter</a></li>
                             <li class="list-group-item"><span>Resume:</span> <a href="{{Storage::url($user->profile->resume)}}" target="blank">Resume letter</a></li>
                     </ul>

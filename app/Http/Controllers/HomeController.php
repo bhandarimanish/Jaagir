@@ -26,58 +26,71 @@ class HomeController extends Controller
      */
     public function index(Job $job)
     {
-        if(Auth::user()->user_type=='employer')
-        {
+        if (Auth::user()->user_type == 'employer') {
             return redirect()->to('/company/create');
         }
-        $adminrole=Auth::user()->roles()->pluck('name');
-        if($adminrole->contains('admin'))
-        {
+        $adminrole = Auth::user()->roles()->pluck('name');
+        if ($adminrole->contains('admin')) {
             return redirect()->to('/dashboard');
         }
-        $jobs=Auth::user()->favorites;
+        $jobs = Auth::user()->favorites;
+        $user = Auth::user();
         $jobRecommendations = $this->jobRecommendations($job);
-        return view('home',compact('jobs','jobRecommendations'));
+        return view('home', compact('jobs', 'jobRecommendations'));
     }
 
     public function jobRecommendations($job)
     {
         $data = [];
+        $user = Auth::user();
 
-        $jobsBasedOnCategories = Job::latest()->where('category_id', $job->category_id)
+        $jobBasedOnPosition = Job::where('position', 'LIKE', '%' . $user->profile->position . '%')
+        ->where('id', '!=', $job->id)
+        ->where('status', 1)
+        ->inRandomOrder()
+        ->limit(10)
+        ->get();
+    array_push($data, $jobBasedOnPosition);
+
+
+        $jobsBasedOnCategories = Job::latest()->where('category_id', $user->profile->category)
             ->whereDate('last_date', '>', date('Y-m-d'))
             ->where('id', '!=', $job->id)
             ->where('status', 1)
-            ->limit(6)
+            ->inRandomOrder()
+            ->limit(10)
             ->get();
         array_push($data, $jobsBasedOnCategories);
 
-        $jobBasedOnCompany = Job::latest()
-            ->where('company_id', $job->company_id)
+
+        $jobBasedOnType = Job::latest()
+            ->where('type', $user->profile->jobtype)
             ->whereDate('last_date', '>', date('Y-m-d'))
             ->where('id', '!=', $job->id)
+            ->inRandomOrder()
             ->where('status', 1)
-            ->limit(6)
+            ->limit(10)
             ->get();
-        array_push($data, $jobBasedOnCompany);
+        array_push($data, $jobBasedOnType);
 
-        $jobBasedOnPosition = Job::where('position', 'LIKE', '%' . $job->position . '%')
+        $jobBasedOnExperience = Job::latest()
+            ->where('experience', $user->profile->experience)
+            ->whereDate('last_date', '>', date('Y-m-d'))
             ->where('id', '!=', $job->id)
+            ->inRandomOrder()
             ->where('status', 1)
-            ->limit(6);
-        array_push($data, $jobBasedOnPosition);
+            ->limit(10)
+            ->get();
+        array_push($data, $jobBasedOnExperience);
         $collection  = collect($data);
-        $unique = $collection->unique("id");
-        $jobRecommendations =  $unique->values()->first();
+        $collection =  $collection->unique("id");
+        $jobRecommendations =  $collection->values()->first();
         return $jobRecommendations;
     }
 
     public function usermyjob()
     {
-        $jobs=Auth::user()->userjob;
-        return view('jobs.usermyjob',compact('jobs'));
+        $jobs = Auth::user()->userjob;
+        return view('jobs.usermyjob', compact('jobs'));
     }
-
-
-
 }

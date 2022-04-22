@@ -28,11 +28,11 @@
             @endif
 
             <div class="col-lg-12"  style="overflow-x:auto;">
-                <div class="p-4 mt-3 mb-8 bg-white">
+                <div class="p-4 mt-3 mb-1 bg-white">
                     <div class="row"  style="overflow-x:auto;">
-                        <h3>About our company</h3>
+                        <h3>About our company:</h3>
                         <hr>
-                        <p>{{$company->description}}</p>
+                        <p>{!!$company->description!!}</p>
                     </div>
                 </div>
                 <table class="table table-bordered mt-5"  style="overflow-x:auto;">
@@ -56,7 +56,7 @@
                                     <td>{{$company->slogan}}</td>
                                     <td>{{$company->address}}</td>
                                     <td>{{$company->phone}}</td>
-                                    <td><a href="{{$company->website}}" target="blank">{{$company->website}}</a></td>
+                                    <td><a href="http://{{$company->website}}" target="blank">{{$company->website}}</a></td>
                                 </tr>
                             </tbody>
                         </table>

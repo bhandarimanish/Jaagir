@@ -21,6 +21,10 @@
         <h4 style="color: white;"><a href="/" style="color: yellow;"> Home </a>/Applied Job</h4>
     </div>
 </div>
+<div class="col-md-6 mt-4 mx-auto text-center mb-5 section-heading">
+    <h2 style="font-family: cursive;">My Jobs</h2>
+
+</div>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -76,7 +80,9 @@
             </div>
             @endforeach
             @else
-            <p class="mt-2 mb-2" style="color: red; font-weight:600;text-align:center">No-one, has applied till the date!</p>
+            <br>
+            <p class="mt-2 mb-2" style="color: red; font-weight:600;text-align:center">You have not applied for any job, till the date!</p>
+            <br>
             @endif
         </div>
     </div>

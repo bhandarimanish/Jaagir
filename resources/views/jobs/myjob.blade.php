@@ -61,6 +61,33 @@
                                     <a href="{{route('job.edit',[$job->id])}}">
                                         <button class="btn btn-dark btn-sm ">Edit</button>
                                     </a>
+
+                                    <a href="#" data-toggle="modal" data-target="#exampleModal{{$job->id}}">
+                                    <button class="btn btn-danger btn-sm ">Delete</button></a>
+
+                            <div class="modal fade" id="exampleModal{{$job->id}}" tabindex="-1" news="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" news="document">
+                                    <form action="{{route('job.destroy',[$job->id])}}" method="post">
+                                        @csrf
+                                        {{ method_field('DELETE') }} 
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                               <b> Do you really want to delete?</b>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                                 </td>
                             </tr>
                             @endforeach

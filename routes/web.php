@@ -8,6 +8,7 @@ Route::get('/', 'JobController@index');
 Route::get('/jobs/create', 'JobController@create')->name('job.create');
 Route::post('/jobs/create', 'JobController@store')->name('job.store');
 Route::get('/jobs/{id}/edit', 'JobController@edit')->name('job.edit');
+Route::delete('/jobs/{id}/delete', 'JobController@destroy')->name('job.destroy');
 Route::post('/jobs/{id}/edit', 'JobController@update')->name('job.update');
 Route::get('jobs/my-job', 'JobController@myjob')->name('job.mine');
 Route::get('jobs/applications', 'JobController@applicant')->name('job.applicant');
@@ -70,7 +71,7 @@ Route::get('/dashboard/{id}/toggle', 'DashboardController@toggle')->name('post.t
 Route::get('/posts/{id}/{slug}', 'DashboardController@show')->name('post.show');
 Route::get('/dashboard/jobs', 'DashboardController@getAllJobs')->middleware('admin');
 Route::get('/dashboard/{id}/jobs', 'DashboardController@changeJobStatus')->name('job.status')->middleware('admin');
-
+Route::delete('/jobs/{id}/destroy', 'DashboardController@delete')->name('job.delete')->middleware('admin');
 //testimonial
 Route::get('testimonial', 'TestimonialController@index')->middleware('admin');
 Route::get('testimonial/create', 'TestimonialController@create')->middleware('admin');

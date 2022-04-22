@@ -15,8 +15,9 @@
     <h4 style="color: white;"><a href="/"> Home </a>/Job Details</h4>
   </div>
 </div>
+
 <div class="album text-muted">
-  <div class="container">
+  <div class="container mt-4">
     @if(Session::has('message'))
 
     <div class="alert alert-success">{{Session::get('message')}}</div>
@@ -42,33 +43,42 @@
       <div class="col-lg-8 mt-3 bg-white">
         <div class="p-4 mb-8 bg-light">
           <!-- icon-book mr-3-->
-          <h3 class="h5 text-black mb-3"><i class="fa fa-book" style="color: blue;">&nbsp;</i>Description <a href="#" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-envelope-square" style="font-size: 40px;float:right;color:green;"></i></a></h3>
+          <h3 class="h5 text-black mb-3"><i class="fa fa-book" style="color: blue;">&nbsp;</i>Description: <a href="#" data-toggle="modal" data-target="#exampleModal1"><i class="fa fa-envelope-square" style="font-size: 40px;float:right;color:green;"></i></a></h3>
           <p> {!!$job->description!!}</p>
           <hr>
         </div>
         <div class="p-4 mb-8 bg-light">
           <!--icon-align-left mr-3-->
-          <h3 class="h5 text-black mb-3"><i class="fa fa-user" style="color: blue;">&nbsp;</i>Roles and Responsibilities</h3>
+          <h3 class="h5 text-black mb-3"><i class="fa fa-user" style="color: blue;">&nbsp;</i>Roles and Responsibilities:</h3>
           <p>{!!$job->roles!!}</p>
           <hr>
         </div>
         <div class="p-4 mb-8 bg-light">
-          <h3 class="h5 text-black mb-3"><i class="fa fa-users" style="color: blue;">&nbsp;</i>Number of vacancy</h3>
+          <h3 class="h5 text-black mb-3"><i class="fa fa-users" style="color: blue;">&nbsp;</i>Number of vacancy:</h3>
           <p>{{$job->number_of_vacancy }} .</p>
           <hr>
         </div>
         <div class="p-4 mb-8 bg-light">
-          <h3 class="h5 text-black mb-3"><i class="fa fa-clock-o" style="color: blue;">&nbsp;</i>Experience</h3>
+          <h3 class="h5 text-black mb-3"><i class="fa fa-clock-o" style="color: blue;">&nbsp;</i>Experience:</h3>
           <p>{{$job->experience}}&nbsp;years</p>
           <hr>
         </div>
         <div class="p-4 mb-8 bg-light">
-          <h3 class="h5 text-black mb-3"><i class="fa fa-venus-mars" style="color: blue;">&nbsp;</i>Gender</h3>
+          <h3 class="h5 text-black mb-3"><i class="fa fa-venus-mars" style="color: blue;">&nbsp;</i>Gender:</h3>
           <p>{{$job->gender}} </p>
           <hr>
         </div>
         <div class="p-4 mb-8 bg-light">
-          <h3 class="h5 text-black mb-3"><i class="fa fa-dollar" style="color: blue;">&nbsp;</i>Salary</h3>
+          <h3 class="h5 text-black mb-3"><i class="fa fa-user" style="color: blue;">&nbsp;</i>Resources:</h3>
+          @if(!$job->resources==NULL)
+          <p>{!!$job->resources!!}</p>
+          @else
+          <p>No any resources!!</p>
+          @endif
+          <hr>
+        </div>
+        <div class="p-4 mb-8 bg-light">
+          <h3 class="h5 text-black mb-3"><i class="fa fa-dollar" style="color: blue;">&nbsp;</i>Salary(RS):</h3>
           <p>{{$job->salary}}</p>
           <hr>
         </div>
@@ -89,31 +99,41 @@
 
         <p><a href="{{route('company.index',[$job->company->id,$job->company->slug])}}" class="btn btn-warning" style="width: 100%;">Visit Company Page</a></p>
         <p>
-          @if(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->profile->address)
-        <p style="color: red; font-weight:600;text-align:center">To apply, Please update your profile first.</p>
-        @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->profile->resume)
-        <p style="color: red; font-weight:600;text-align:center">To apply, Please update your resume.</p>
-        @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->profile->cover_letter)
-        <p style="color: red; font-weight:600;text-align:center">To apply, Please update your coverletter.</p>
-        @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&Auth::user()->email_verified_at)
 
-        @if(!$job->checkApplication())
+          @if(Auth::check()&&Auth::user()->user_type=='seeker'&& $job->last_date < Carbon\Carbon::now()) <button class="btn btn-danger" style="width: 100%;" disabled>Apply the job</button>
+            <p style="color: red; font-weight:600;text-align:center">The job has been expired.</p>
+            @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->profile->address)
+            <a class="btn btn-primary" style="width: 100%;"  href="{{route('user.profile')}}">Update the profile</a>
+            <p style="color: red; font-weight:600;text-align:center">To apply, Please update your profile first.</p>
+            @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->profile->resume)
+            <a class="btn btn-primary" style="width: 100%;"  href="{{route('user.profile')}}">Update the resume</a>
+            <p style="color: red; font-weight:600;text-align:center">To apply, Please update your resume.</p>
+            @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->profile->cover_letter)
+            <a class="btn btn-primary" style="width: 100%;"  href="{{route('user.profile')}}">Update the coverletter</a>
+            <p style="color: red; font-weight:600;text-align:center">To apply, Please update your coverletter.</p>
+            @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&Auth::user()->email_verified_at)
 
-        <apply-component :jobid={{$job->id}}></apply-component>
-        @else
-        <center><span style="color:green;">You applied for this job!!</span></center>
-        @endif
-        <br>
-        <favorite-component :jobid={{$job->id}} :favorited={{$job->checkSaved()?'true':'false'}}></favorite-component>
-        @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->email_verified_at)
-        <p style="color: red; font-weight:600;text-align:center">Please verify to apply for this job</p>
-        @elseif(Auth::check()&&Auth::user()->user_type=='employer')
-        <p></p>
-        @elseif(Auth::check()&&Auth::user()->user_type=='admin')
-        <p></p>
-        @else
-        <p style="color: red; font-weight:600;text-align:center">Please login to apply for this job</p>
-        @endif
+            @if(!$job->checkApplication())
+
+            <apply-component :jobid={{$job->id}}></apply-component>
+            @else
+            <center><button class="btn btn-success mb-3" style="width: 100%;" disabled >You already applied for this job!!</button></center>
+            @endif
+
+            @elseif(Auth::check()&&Auth::user()->user_type=='seeker'&&!Auth::user()->email_verified_at)
+            <a class="btn btn-primary" style="width: 100%;"  href="/email/verify">Email Verification</a>
+            <p style="color: red; font-weight:600;text-align:center">Please verify your email to apply!</p>
+            @elseif(Auth::check()&&Auth::user()->user_type=='employer')
+            <p>You are employer and cant apply the job!</p>
+            @elseif(Auth::check()&&Auth::user()->user_type=='admin')
+            <p>You are admin and cant apply the job!</p>
+            @else
+            <p><a data-toggle="modal" data-target="#exampleModal" class="btn btn-primary text-white" style="width: 100%;">Login</a></p>
+            <p style="color: red; font-weight:600;text-align:center">Please login to apply for this job</p>
+            @endif
+            @if(Auth::check()&&Auth::user()->user_type=='seeker')
+            <favorite-component :jobid={{$job->id}} :favorited={{$job->checkSaved()?'true':'false'}}></favorite-component>
+            @endif
         </p>
       </div>
     </div>
@@ -121,31 +141,30 @@
 </div>
 
 
-    <div class="col-md-6 mt-4 mx-auto text-center mb-5 section-heading">
-      <h2 style="font-family: cursive;">Recommended Jobs</h2>
-    </div>
-@if(count($jobRecommendations)>0)
-@foreach($jobRecommendations as $jobRecommendation)
-<div class="row">
+<div class="col-md-6 mt-4 mx-auto text-center mb-5 section-heading">
+  <h2 style="font-family: cursive;">Recommended Jobs</h2>
+</div>
 <div class="container">
-  <div class="col-sm-6 col-md-4 col-lg-3 mb-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
-    <div class="card feature-item">
-      <div class="badge badge-warning">{{$jobRecommendation->type}}</div>
-      <h4 class="card-title mt-2">{{Illuminate\Support\Str::limit($jobRecommendation->company->cname,14)}}</h4>
-      <p class="card-text font-weight-bold">{{Illuminate\Support\Str::limit($jobRecommendation->position,20)}}</p>
-      @if ($jobRecommendation->last_date < Carbon\Carbon::now())
-        <p class="badge badge-danger">expired</p>
-        @endif
-        <center> <a href="{{route('jobs.show',[$jobRecommendation->id,$jobRecommendation->slug])}}" class="btn btn-success">Apply</a></center>
+  <div class="row">
+    @if(count($jobRecommendations)>0)
+    @foreach($jobRecommendations as $jobRecommendation)
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-3 justify-content-center" data-aos="fade-up" data-aos-delay="100">
+      <div class="card feature-item">
+        <div class="badge badge-warning">{{$jobRecommendation->type}}</div>
+        <h4 class="card-title mt-2">{{Illuminate\Support\Str::limit($jobRecommendation->company->cname,14)}}</h4>
+        <p class="card-text font-weight-bold">{{Illuminate\Support\Str::limit($jobRecommendation->position,20)}}</p>
+        @if ($jobRecommendation->last_date < Carbon\Carbon::now()) <p class="badge badge-danger">expired</p>
+          @endif
+          <center> <a href="{{route('jobs.show',[$jobRecommendation->id,$jobRecommendation->slug])}}" class="btn btn-success">Apply</a></center>
+      </div>
     </div>
+    @endforeach
   </div>
 </div>
-</div>
-@endforeach
-
 @else
 <p class="col-md-6 mt-4 mx-auto text-center mb-5 section-heading" style="color: red;">Sorry, No Recommended Jobs Found!!</p>
 @endif
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
